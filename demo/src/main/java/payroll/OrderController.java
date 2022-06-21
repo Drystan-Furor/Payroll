@@ -1,5 +1,26 @@
 package payroll;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.mediatype.problem.Problem;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+// tag::main[]
 @RestController
 class OrderController {
 
@@ -42,7 +63,9 @@ class OrderController {
                 .created(linkTo(methodOn(OrderController.class).one(newOrder.getId())).toUri()) //
                 .body(assembler.toModel(newOrder));
     }
+    // end::main[]
 
+    // tag::delete[]
     @DeleteMapping("/orders/{id}/cancel")
     ResponseEntity<?> cancel(@PathVariable Long id) {
 
@@ -61,7 +84,9 @@ class OrderController {
                         .withTitle("Method not allowed") //
                         .withDetail("You can't cancel an order that is in the " + order.getStatus() + " status"));
     }
+    // end::delete[]
 
+    // tag::complete[]
     @PutMapping("/orders/{id}/complete")
     ResponseEntity<?> complete(@PathVariable Long id) {
 
@@ -80,4 +105,5 @@ class OrderController {
                         .withTitle("Method not allowed") //
                         .withDetail("You can't complete an order that is in the " + order.getStatus() + " status"));
     }
+    // end::complete[]
 }
